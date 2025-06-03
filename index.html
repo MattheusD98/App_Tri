@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agenda Inteligente - Mecânica TriAuto</title>
+  <style>
+    /* ===== Estilo Geral (fundo escuro, tipografia legível) ===== */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #1b1b1b;
+      color: #e0e0e0;
+    }
+    h1 {
+      color: #00aaff;
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #cfcfcf;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: #2c2c2c;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #00aaff;
+      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #00aaff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #0088cc;
+    }
+    button.secondary {
+      background: #555;
+    }
+    button.secondary:hover {
+      background: #444;
+    }
+    /* ===== Tabela estilizada ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #2c2c2c;
+      color: #e0e0e0;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #004b73;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background: #252525;
+    }
+    tr:hover {
+      background: #333;
+    }
+    .action-buttons button {
+      margin-right: 5px;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    /* ===== Campo de pesquisa ===== */
+    #search {
+      width: 50%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: #2c2c2c;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+    #search:focus {
+      outline: none;
+      border-color: #00aaff;
+      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+    }
+    /* ===== Responsividade simples ===== */
+    @media (max-width: 600px) {
+      button, input, select, textarea, #search {
+        font-size: 12px;
+      }
+      th, td {
+        font-size: 12px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Agenda Inteligente - Mecânica TriAuto</h1>
+
+  <!-- Campo de pesquisa para filtrar por cliente -->
+  <input type="text" id="search" placeholder="🔍 Pesquisar cliente..." />
+
+  <form id="form">
+    <input type="hidden" id="editIndex" />
+
+    <label>Nome do Cliente</label>
+    <input type="text" id="cliente" required />
+
+    <label>WhatsApp</label>
+    <input
+      type="text"
+      id="whatsapp"
+      placeholder="+55XXXXXXXXXXX"
+      pattern="^\+?\d{10,15}$"
+      title="Informe o número no formato internacional, ex: +5511999999999"
+      required
+    />
+
+    <label>Máquina / Veículo</label>
+    <input type="text" id="maquina" required />
+
+    <label>Modelo do Veículo</label>
+    <input type="text" id="modelo" required />
+
+    <label>Tipo de Serviço</label>
+    <select id="tipo">
+      <option value="Preventiva">Preventiva</option>
+      <option value="Corretiva">Corretiva</option>
+      <option value="Revisão">Revisão</option>
+    </select>
+
+    <label>Data</label>
+    <input type="date" id="data" required />
+
+    <label>Status</label>
+    <select id="status">
+      <option value="Agendado">Agendado</option>
+      <option value="Em Execução">Em Execução</option>
+      <option value="Concluído">Concluído</option>
+    </select>
+
+    <label>Orçamento Total (R$)</label>
+    <input
+      type="number"
+      id="orcamento"
+      placeholder="Ex: 350.00"
+      min="0"
+      step="0.01"
+    />
+
+    <label>Peças Instaladas</label>
+    <textarea id="pecas" rows="3" placeholder="Ex: Pastilha de freio, Filtro de óleo"></textarea>
+
+    <label>Custo das Peças (R$)</label>
+    <input
+      type="number"
+      id="custoPecas"
+      placeholder="Ex: 150.00"
+      min="0"
+      step="0.01"
+    />
+
+    <label>Custo Mão de Obra (R$)</label>
+    <input
+      type="number"
+      id="custoMaodeObra"
+      placeholder="Ex: 200.00"
+      min="0"
+      step="0.01"
+    />
+
+    <button type="submit">Salvar Agendamento</button>
+    <button type="button" class="secondary" onclick="limparFormulario()">
+      Limpar Campos
+    </button>
+  </form>
+
+  <h2>Agendamentos</h2>
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>WhatsApp</th>
+        <th>Máquina</th>
+        <th>Modelo</th>
+        <th>Serviço</th>
+        <th>Data</th>
+        <th>Status</th>
+        <th>Orçamento</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById("form");
+    const tabelaBody = document.querySelector("#tabela tbody");
+    const searchInput = document.getElementById("search");
+    let agendamentos = JSON.parse(localStorage.getItem("agendamentos") || "[]");
+
+    function renderizarTabela() {
+      tabelaBody.innerHTML = "";
+      agendamentos.forEach((a, index) => {
+        const row = tabelaBody.insertRow();
+        row.insertCell(0).textContent = a.cliente;
+        row.insertCell(1).textContent = a.whatsapp;
+        row.insertCell(2).textContent = a.maquina;
+        row.insertCell(3).textContent = a.modelo;
+        row.insertCell(4).textContent = a.tipo;
+        const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
+        row.insertCell(5).textContent = dataFormatada;
+        row.insertCell(6).textContent = a.status;
+        row.insertCell(7).textContent = a.orcamento && a.orcamento !== "" ? `R$ ${parseFloat(a.orcamento).toFixed(2)}` : "-";
+
+        const actions = row.insertCell(8);
+        actions.classList.add("action-buttons");
+        actions.innerHTML = `
+          <button onclick="editarAgendamento(${index})">✏️</button>
+          <button onclick="excluirAgendamento(${index})">🗑️</button>
+          <button onclick="enviarAgendamentoWhatsApp(${index})">📤 Agenda</button>
+          <button onclick="enviarOrcamentoWhatsApp(${index})">💰 Orçamento</button>
+        `;
+      });
+      aplicarFiltro();
+    }
+
+    function editarAgendamento(index) {
+      const a = agendamentos[index];
+      document.getElementById("editIndex").value = index;
+      document.getElementById("cliente").value = a.cliente;
+      document.getElementById("whatsapp").value = a.whatsapp;
+      document.getElementById("maquina").value = a.maquina;
+      document.getElementById("modelo").value = a.modelo;
+      document.getElementById("tipo").value = a.tipo;
+      document.getElementById("data").value = a.data;
+      document.getElementById("status").value = a.status;
+      document.getElementById("orcamento").value = a.orcamento || "";
+      document.getElementById("pecas").value = a.pecas || "";
+      document.getElementById("custoPecas").value = a.custoPecas || "";
+      document.getElementById("custoMaodeObra").value = a.custoMaodeObra || "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      document.getElementById("cliente").focus();
+    }
+
+    function excluirAgendamento(index) {
+      if (confirm("Deseja realmente excluir este agendamento?")) {
+        agendamentos.splice(index, 1);
+        localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+        renderizarTabela();
+      }
+    }
+
+    function limparFormulario() {
+      form.reset();
+      document.getElementById("editIndex").value = "";
+    }
+
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      const novoAgendamento = {
+        cliente: document.getElementById("cliente").value.trim(),
+        whatsapp: document.getElementById("whatsapp").value.trim(),
+        maquina: document.getElementById("maquina").value.trim(),
+        modelo: document.getElementById("modelo").value.trim(),
+        tipo: document.getElementById("tipo").value,
+        data: document.getElementById("data").value,
+        status: document.getElementById("status").value,
+        orcamento: document.getElementById("orcamento").value.trim(),
+        pecas: document.getElementById("pecas").value.trim(),
+        custoPecas: document.getElementById("custoPecas").value.trim(),
+        custoMaodeObra: document.getElementById("custoMaodeObra").value.trim()
+      };
+      const index = document.getElementById("editIndex").value;
+      if (index === "") {
+        agendamentos.push(novoAgendamento);
+      } else {
+        agendamentos[index] = novoAgendamento;
+      }
+      localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+      limparFormulario();
+      renderizarTabela();
+    };
+
+    function aplicarFiltro() {
+      const filtro = searchInput.value.toLowerCase();
+      Array.from(tabelaBody.rows).forEach((row) => {
+        const clienteCell = row.cells[0].textContent.toLowerCase();
+        row.style.display = clienteCell.includes(filtro) ? "" : "none";
+      });
+    }
+
+    searchInput.addEventListener("keyup", aplicarFiltro);
+
+    function enviarAgendamentoWhatsApp(index) {
+      const a = agendamentos[index];
+      const numeroRaw = a.whatsapp.replace(/\D/g, "");
+      const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
+      const msg = `Olá ${a.cliente}, seu atendimento está agendado para ${dataFormatada} no seu ${a.modelo} para ${a.tipo}.`;
+      const url = `https://api.whatsapp.com/send?phone=${numeroRaw}&text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+    }
+
+    function enviarOrcamentoWhatsApp(index) {
+      const a = agendamentos[index];
+      if (!a.orcamento || a.orcamento.trim() === "") {
+        alert("Preencha o campo Orçamento antes de enviar o orçamento via WhatsApp.");
+        return;
+      }
+      const numeroRaw = a.whatsapp.replace(/\D/g, "");
+      const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
+      const msg = `Olá ${a.cliente}, o orçamento para a manutenção do seu ${a.modelo} é:
+Peças instaladas: ${a.pecas || '-'}
+Custo das peças: R$ ${a.custoPecas || '0.00'}
+Custo mão de obra: R$ ${a.custoMaodeObra || '0.00'}
+Orçamento total: R$ ${parseFloat(a.orcamento).toFixed(2)}`;
+      const url = `https://api.whatsapp.com/send?phone=${numeroRaw}&text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+    }
+
+    // Inicializa tabela ao carregar
+    renderizarTabela();
+  </script>
+</body>
+</html>
