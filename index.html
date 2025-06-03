@@ -235,7 +235,10 @@
         const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
         row.insertCell(5).textContent = dataFormatada;
         row.insertCell(6).textContent = a.status;
-        row.insertCell(7).textContent = a.orcamento && a.orcamento !== "" ? `R$ ${parseFloat(a.orcamento).toFixed(2)}` : "-";
+        const orcamentoVal = parseFloat(a.orcamento);
+        row.insertCell(7).textContent = !isNaN(orcamentoVal)
+          ? `R$ ${orcamentoVal.toFixed(2)}`
+          : "-";
 
         const actions = row.insertCell(8);
         actions.classList.add("action-buttons");
@@ -327,8 +330,11 @@
 
     function enviarOrcamentoWhatsApp(index) {
       const a = agendamentos[index];
-      if (!a.orcamento || a.orcamento.trim() === "") {
-        alert("Preencha o campo Orçamento antes de enviar o orçamento via WhatsApp.");
+      const orcamentoVal = parseFloat(a.orcamento);
+      if (isNaN(orcamentoVal)) {
+        alert(
+          "Preencha o campo Orçamento com um valor numérico antes de enviar o orçamento via WhatsApp."
+        );
         return;
       }
       const numeroRaw = a.whatsapp.replace(/\D/g, "");
@@ -337,7 +343,7 @@
 Peças instaladas: ${a.pecas || '-'}
 Custo das peças: R$ ${a.custoPecas || '0.00'}
 Custo mão de obra: R$ ${a.custoMaodeObra || '0.00'}
-Orçamento total: R$ ${parseFloat(a.orcamento).toFixed(2)}`;
+Orçamento total: R$ ${orcamentoVal.toFixed(2)}`;
       const url = `https://api.whatsapp.com/send?phone=${numeroRaw}&text=${encodeURIComponent(msg)}`;
       window.open(url, "_blank");
     }
