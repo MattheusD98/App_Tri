@@ -1,355 +1,188 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Agenda Inteligente - Mecânica TriAuto</title>
+  <title>Escola de Futsal - Portal</title>
   <style>
-    /* ===== Estilo Geral (fundo escuro, tipografia legível) ===== */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
       margin: 0;
       padding: 20px;
-      background: #1b1b1b;
-      color: #e0e0e0;
+      color: #333;
     }
     h1 {
-      color: #00aaff;
-      font-size: 28px;
-      margin-bottom: 20px;
       text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 300px;
     }
     label {
       display: block;
-      margin-top: 12px;
-      font-size: 14px;
-      color: #cfcfcf;
+      margin-top: 10px;
     }
-    input, select, textarea {
+    input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
-      border: 1px solid #444;
-      border-radius: 4px;
-      background: #2c2c2c;
-      color: #e0e0e0;
-      font-size: 14px;
-    }
-    textarea {
-      resize: vertical;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #00aaff;
-      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
     }
     button {
       margin-top: 15px;
-      padding: 10px 20px;
-      background: #00aaff;
-      color: white;
+      width: 100%;
+      padding: 10px;
+      background: #0077cc;
+      color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
     }
     button:hover {
-      background: #0088cc;
+      background: #005fa3;
     }
-    button.secondary {
-      background: #555;
+    #dashboard {
+      margin-top: 30px;
     }
-    button.secondary:hover {
-      background: #444;
+    #dashboard h2 {
+      text-align: center;
     }
-    /* ===== Tabela estilizada ===== */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #2c2c2c;
-      color: #e0e0e0;
+    #dashboard ul {
+      list-style: none;
+      padding: 0;
     }
-    th, td {
-      border: 1px solid #444;
+    #dashboard li {
+      background: #fff;
+      margin: 10px 0;
       padding: 10px;
-      text-align: left;
-      font-size: 14px;
-    }
-    th {
-      background: #004b73;
-      color: #fff;
-    }
-    tr:nth-child(even) {
-      background: #252525;
-    }
-    tr:hover {
-      background: #333;
-    }
-    .action-buttons button {
-      margin-right: 5px;
-      padding: 5px 10px;
-      font-size: 12px;
-    }
-    /* ===== Campo de pesquisa ===== */
-    #search {
-      width: 50%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #444;
       border-radius: 4px;
-      background: #2c2c2c;
-      color: #e0e0e0;
-      font-size: 14px;
-    }
-    #search:focus {
-      outline: none;
-      border-color: #00aaff;
-      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
-    }
-    /* ===== Responsividade simples ===== */
-    @media (max-width: 600px) {
-      button, input, select, textarea, #search {
-        font-size: 12px;
-      }
-      th, td {
-        font-size: 12px;
-        padding: 8px;
-      }
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <h1>Agenda Inteligente - Mecânica TriAuto</h1>
+  <h1>Portal Escola de Futsal</h1>
+  <div class="container">
+    <!-- Área do Aluno -->
+    <div class="card">
+      <h2>Acesso do Aluno</h2>
+      <div id="student-forms">
+        <div id="student-login">
+          <h3>Login</h3>
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" />
+          <label for="loginSenha">Senha</label>
+          <input type="password" id="loginSenha" />
+          <button onclick="loginAluno()">Entrar</button>
+          <button onclick="mostrarCadastro()" style="background:#555">Primeiro acesso</button>
+        </div>
+        <div id="student-register" style="display:none">
+          <h3>Cadastro</h3>
+          <label for="nomeAluno">Nome do Aluno</label>
+          <input type="text" id="nomeAluno" />
+          <label for="nomeResponsavel">Nome do Responsável</label>
+          <input type="text" id="nomeResponsavel" />
+          <label for="emailAluno">Email</label>
+          <input type="email" id="emailAluno" />
+          <label for="senhaAluno">Senha</label>
+          <input type="password" id="senhaAluno" />
+          <button onclick="cadastrarAluno()">Cadastrar</button>
+          <button onclick="mostrarLogin()" style="background:#555">Já sou aluno</button>
+        </div>
+      </div>
+    </div>
 
-  <!-- Campo de pesquisa para filtrar por cliente -->
-  <input type="text" id="search" placeholder="🔍 Pesquisar cliente..." />
+    <!-- Área do Administrador -->
+    <div class="card">
+      <h2>Acesso do Administrador</h2>
+      <label for="adminEmail">Email</label>
+      <input type="email" id="adminEmail" />
+      <label for="adminSenha">Senha</label>
+      <input type="password" id="adminSenha" />
+      <button onclick="loginAdmin()">Entrar</button>
+    </div>
+  </div>
 
-  <form id="form">
-    <input type="hidden" id="editIndex" />
-
-    <label>Nome do Cliente</label>
-    <input type="text" id="cliente" required />
-
-    <label>WhatsApp</label>
-    <input
-      type="text"
-      id="whatsapp"
-      placeholder="+55XXXXXXXXXXX"
-      pattern="^\+?\d{10,15}$"
-      title="Informe o número no formato internacional, ex: +5511999999999"
-      required
-    />
-
-    <label>Máquina / Veículo</label>
-    <input type="text" id="maquina" required />
-
-    <label>Modelo do Veículo</label>
-    <input type="text" id="modelo" required />
-
-    <label>Tipo de Serviço</label>
-    <select id="tipo">
-      <option value="Preventiva">Preventiva</option>
-      <option value="Corretiva">Corretiva</option>
-      <option value="Revisão">Revisão</option>
-    </select>
-
-    <label>Data</label>
-    <input type="date" id="data" required />
-
-    <label>Status</label>
-    <select id="status">
-      <option value="Agendado">Agendado</option>
-      <option value="Em Execução">Em Execução</option>
-      <option value="Concluído">Concluído</option>
-    </select>
-
-    <label>Orçamento Total (R$)</label>
-    <input
-      type="number"
-      id="orcamento"
-      placeholder="Ex: 350.00"
-      min="0"
-      step="0.01"
-    />
-
-    <label>Peças Instaladas</label>
-    <textarea id="pecas" rows="3" placeholder="Ex: Pastilha de freio, Filtro de óleo"></textarea>
-
-    <label>Custo das Peças (R$)</label>
-    <input
-      type="number"
-      id="custoPecas"
-      placeholder="Ex: 150.00"
-      min="0"
-      step="0.01"
-    />
-
-    <label>Custo Mão de Obra (R$)</label>
-    <input
-      type="number"
-      id="custoMaodeObra"
-      placeholder="Ex: 200.00"
-      min="0"
-      step="0.01"
-    />
-
-    <button type="submit">Salvar Agendamento</button>
-    <button type="button" class="secondary" onclick="limparFormulario()">
-      Limpar Campos
-    </button>
-  </form>
-
-  <h2>Agendamentos</h2>
-  <table id="tabela">
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>WhatsApp</th>
-        <th>Máquina</th>
-        <th>Modelo</th>
-        <th>Serviço</th>
-        <th>Data</th>
-        <th>Status</th>
-        <th>Orçamento</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <!-- Dashboard com funcionalidades -->
+  <div id="dashboard" style="display:none">
+    <h2>Funcionalidades</h2>
+    <ul>
+      <li>Cadastro de alunos e responsáveis</li>
+      <li>Agendamento de aulas</li>
+      <li>Acompanhamento de frequência</li>
+      <li>Informações sobre horários e professores</li>
+      <li>Comunicação com pais e alunos</li>
+      <li>Notícias e eventos</li>
+      <li>Resultados de jogos</li>
+      <li>Informações sobre fundamentos do futsal</li>
+      <li>Sistema de avaliação dos alunos</li>
+      <li>Galeria de fotos e vídeos (opcional)</li>
+      <li>Loja virtual (opcional)</li>
+      <li>Notificações push (opcional)</li>
+      <li>Integração com redes sociais (opcional)</li>
+      <li>Acesso a materiais de treino (opcional)</li>
+      <li>Sistema de feedback (opcional)</li>
+    </ul>
+  </div>
 
   <script>
-    const form = document.getElementById("form");
-    const tabelaBody = document.querySelector("#tabela tbody");
-    const searchInput = document.getElementById("search");
-    let agendamentos = JSON.parse(localStorage.getItem("agendamentos") || "[]");
+    const alunos = JSON.parse(localStorage.getItem('alunos')) || [];
 
-    function renderizarTabela() {
-      tabelaBody.innerHTML = "";
-      agendamentos.forEach((a, index) => {
-        const row = tabelaBody.insertRow();
-        row.insertCell(0).textContent = a.cliente;
-        row.insertCell(1).textContent = a.whatsapp;
-        row.insertCell(2).textContent = a.maquina;
-        row.insertCell(3).textContent = a.modelo;
-        row.insertCell(4).textContent = a.tipo;
-        const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
-        row.insertCell(5).textContent = dataFormatada;
-        row.insertCell(6).textContent = a.status;
-        const orcamentoVal = parseFloat(a.orcamento);
-        row.insertCell(7).textContent = !isNaN(orcamentoVal)
-          ? `R$ ${orcamentoVal.toFixed(2)}`
-          : "-";
-
-        const actions = row.insertCell(8);
-        actions.classList.add("action-buttons");
-        actions.innerHTML = `
-          <button onclick="editarAgendamento(${index})">✏️</button>
-          <button onclick="excluirAgendamento(${index})">🗑️</button>
-          <button onclick="enviarAgendamentoWhatsApp(${index})">📤 Agenda</button>
-          <button onclick="enviarOrcamentoWhatsApp(${index})">💰 Orçamento</button>
-        `;
-      });
-      aplicarFiltro();
+    function mostrarCadastro() {
+      document.getElementById('student-login').style.display = 'none';
+      document.getElementById('student-register').style.display = 'block';
     }
 
-    function editarAgendamento(index) {
-      const a = agendamentos[index];
-      document.getElementById("editIndex").value = index;
-      document.getElementById("cliente").value = a.cliente;
-      document.getElementById("whatsapp").value = a.whatsapp;
-      document.getElementById("maquina").value = a.maquina;
-      document.getElementById("modelo").value = a.modelo;
-      document.getElementById("tipo").value = a.tipo;
-      document.getElementById("data").value = a.data;
-      document.getElementById("status").value = a.status;
-      document.getElementById("orcamento").value = a.orcamento || "";
-      document.getElementById("pecas").value = a.pecas || "";
-      document.getElementById("custoPecas").value = a.custoPecas || "";
-      document.getElementById("custoMaodeObra").value = a.custoMaodeObra || "";
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      document.getElementById("cliente").focus();
+    function mostrarLogin() {
+      document.getElementById('student-register').style.display = 'none';
+      document.getElementById('student-login').style.display = 'block';
     }
 
-    function excluirAgendamento(index) {
-      if (confirm("Deseja realmente excluir este agendamento?")) {
-        agendamentos.splice(index, 1);
-        localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-        renderizarTabela();
-      }
-    }
-
-    function limparFormulario() {
-      form.reset();
-      document.getElementById("editIndex").value = "";
-    }
-
-    form.onsubmit = function (e) {
-      e.preventDefault();
-      const novoAgendamento = {
-        cliente: document.getElementById("cliente").value.trim(),
-        whatsapp: document.getElementById("whatsapp").value.trim(),
-        maquina: document.getElementById("maquina").value.trim(),
-        modelo: document.getElementById("modelo").value.trim(),
-        tipo: document.getElementById("tipo").value,
-        data: document.getElementById("data").value,
-        status: document.getElementById("status").value,
-        orcamento: document.getElementById("orcamento").value.trim(),
-        pecas: document.getElementById("pecas").value.trim(),
-        custoPecas: document.getElementById("custoPecas").value.trim(),
-        custoMaodeObra: document.getElementById("custoMaodeObra").value.trim()
-      };
-      const index = document.getElementById("editIndex").value;
-      if (index === "") {
-        agendamentos.push(novoAgendamento);
-      } else {
-        agendamentos[index] = novoAgendamento;
-      }
-      localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
-      limparFormulario();
-      renderizarTabela();
-    };
-
-    function aplicarFiltro() {
-      const filtro = searchInput.value.toLowerCase();
-      Array.from(tabelaBody.rows).forEach((row) => {
-        const clienteCell = row.cells[0].textContent.toLowerCase();
-        row.style.display = clienteCell.includes(filtro) ? "" : "none";
-      });
-    }
-
-    searchInput.addEventListener("keyup", aplicarFiltro);
-
-    function enviarAgendamentoWhatsApp(index) {
-      const a = agendamentos[index];
-      const numeroRaw = a.whatsapp.replace(/\D/g, "");
-      const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
-      const msg = `Olá ${a.cliente}, seu atendimento está agendado para ${dataFormatada} no seu ${a.modelo} para ${a.tipo}.`;
-      const url = `https://api.whatsapp.com/send?phone=${numeroRaw}&text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank");
-    }
-
-    function enviarOrcamentoWhatsApp(index) {
-      const a = agendamentos[index];
-      const orcamentoVal = parseFloat(a.orcamento);
-      if (isNaN(orcamentoVal)) {
-        alert(
-          "Preencha o campo Orçamento com um valor numérico antes de enviar o orçamento via WhatsApp."
-        );
+    function cadastrarAluno() {
+      const nome = document.getElementById('nomeAluno').value.trim();
+      const responsavel = document.getElementById('nomeResponsavel').value.trim();
+      const email = document.getElementById('emailAluno').value.trim();
+      const senha = document.getElementById('senhaAluno').value.trim();
+      if(!nome || !responsavel || !email || !senha){
+        alert('Preencha todos os campos.');
         return;
       }
-      const numeroRaw = a.whatsapp.replace(/\D/g, "");
-      const dataFormatada = new Date(a.data).toLocaleDateString("pt-BR");
-      const msg = `Olá ${a.cliente}, o orçamento para a manutenção do seu ${a.modelo} é:
-Peças instaladas: ${a.pecas || '-'}
-Custo das peças: R$ ${a.custoPecas || '0.00'}
-Custo mão de obra: R$ ${a.custoMaodeObra || '0.00'}
-Orçamento total: R$ ${orcamentoVal.toFixed(2)}`;
-      const url = `https://api.whatsapp.com/send?phone=${numeroRaw}&text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank");
+      alunos.push({nome, responsavel, email, senha});
+      localStorage.setItem('alunos', JSON.stringify(alunos));
+      alert('Cadastro realizado com sucesso!');
+      mostrarLogin();
     }
 
-    // Inicializa tabela ao carregar
-    renderizarTabela();
+    function loginAluno() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const senha = document.getElementById('loginSenha').value.trim();
+      const aluno = alunos.find(a => a.email === email && a.senha === senha);
+      if(aluno){
+        alert(`Bem-vindo, ${aluno.nome}!`);
+        document.getElementById('dashboard').style.display = 'block';
+      } else {
+        alert('Credenciais inválidas.');
+      }
+    }
+
+    function loginAdmin() {
+      const email = document.getElementById('adminEmail').value.trim();
+      const senha = document.getElementById('adminSenha').value.trim();
+      if(email === 'admin@futsal.com' && senha === '1234'){
+        alert('Bem-vindo, administrador!');
+        document.getElementById('dashboard').style.display = 'block';
+      } else {
+        alert('Administrador não encontrado.');
+      }
+    }
   </script>
 </body>
 </html>
